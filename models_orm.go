@@ -8,24 +8,26 @@ import (
 )
 
 type Site struct {
-	Id string
-	Slug string
-	Name string
-	Domain string
+	Id              string
+	Slug            string
+	Name            string
+	Domain          string
 	DomainExpiresAt int64
-	Plan string
-	Theme string
-	Status int64
-	Dirty bool
-	PublishedAt int64
-	PublishedRef string
+	Plan            string
+	Theme           string
+	Status          int64
+	Dirty           bool
+	PublishedAt     int64
+	PublishedRef    string
 }
 
 func (m *Site) ModelName() string { return "site" }
 
 func (m *Site) Schema() []model.Field { return SiteModel.Fields }
 
-func (m *Site) Pointers() []any { return []any{&m.Id, &m.Slug, &m.Name, &m.Domain, &m.DomainExpiresAt, &m.Plan, &m.Theme, &m.Status, &m.Dirty, &m.PublishedAt, &m.PublishedRef} }
+func (m *Site) Pointers() []any {
+	return []any{&m.Id, &m.Slug, &m.Name, &m.Domain, &m.DomainExpiresAt, &m.Plan, &m.Theme, &m.Status, &m.Dirty, &m.PublishedAt, &m.PublishedRef}
+}
 
 func (m *Site) IsNil() bool { return m == nil }
 
@@ -44,27 +46,49 @@ func (m *Site) EncodeFields(w model.FieldWriter) {
 }
 
 func (m *Site) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok { m.Id = v }
-	if v, ok := r.String("slug"); ok { m.Slug = v }
-	if v, ok := r.String("name"); ok { m.Name = v }
-	if v, ok := r.String("domain"); ok { m.Domain = v }
-	if v, ok := r.Int("domain_expires_at"); ok { m.DomainExpiresAt = v }
-	if v, ok := r.String("plan"); ok { m.Plan = v }
-	if v, ok := r.String("theme"); ok { m.Theme = v }
-	if v, ok := r.Int("status"); ok { m.Status = v }
-	if v, ok := r.Bool("dirty"); ok { m.Dirty = v }
-	if v, ok := r.Int("published_at"); ok { m.PublishedAt = v }
-	if v, ok := r.String("published_ref"); ok { m.PublishedRef = v }
+	if v, ok := r.String("id"); ok {
+		m.Id = v
+	}
+	if v, ok := r.String("slug"); ok {
+		m.Slug = v
+	}
+	if v, ok := r.String("name"); ok {
+		m.Name = v
+	}
+	if v, ok := r.String("domain"); ok {
+		m.Domain = v
+	}
+	if v, ok := r.Int("domain_expires_at"); ok {
+		m.DomainExpiresAt = v
+	}
+	if v, ok := r.String("plan"); ok {
+		m.Plan = v
+	}
+	if v, ok := r.String("theme"); ok {
+		m.Theme = v
+	}
+	if v, ok := r.Int("status"); ok {
+		m.Status = v
+	}
+	if v, ok := r.Bool("dirty"); ok {
+		m.Dirty = v
+	}
+	if v, ok := r.Int("published_at"); ok {
+		m.PublishedAt = v
+	}
+	if v, ok := r.String("published_ref"); ok {
+		m.PublishedRef = v
+	}
 }
 
 type SiteList []*Site
 
-func (s *SiteList) Schema() []model.Field { return nil }
-func (s *SiteList) Pointers() []any     { return nil }
-func (s *SiteList) Len() int             { return len(*s) }
-func (s *SiteList) At(i int) model.Fielder { return (*s)[i] }
-func (s *SiteList) Append() model.Fielder  { v := &Site{}; *s = append(*s, v); return v }
-func (s *SiteList) IsNil() bool          { return s == nil }
+func (s *SiteList) Schema() []model.Field            { return nil }
+func (s *SiteList) Pointers() []any                  { return nil }
+func (s *SiteList) Len() int                         { return len(*s) }
+func (s *SiteList) At(i int) model.Fielder           { return (*s)[i] }
+func (s *SiteList) Append() model.Fielder            { v := &Site{}; *s = append(*s, v); return v }
+func (s *SiteList) IsNil() bool                      { return s == nil }
 func (s *SiteList) EncodeFields(_ model.FieldWriter) {}
 func (s *SiteList) DecodeFields(_ model.FieldReader) {}
 
@@ -73,29 +97,29 @@ func (m *Site) Validate(action byte) error {
 }
 
 var Site_ = struct {
-	Id string
-	Slug string
-	Name string
-	Domain string
+	Id              string
+	Slug            string
+	Name            string
+	Domain          string
 	DomainExpiresAt string
-	Plan string
-	Theme string
-	Status string
-	Dirty string
-	PublishedAt string
-	PublishedRef string
+	Plan            string
+	Theme           string
+	Status          string
+	Dirty           string
+	PublishedAt     string
+	PublishedRef    string
 }{
-	Id: "id",
-	Slug: "slug",
-	Name: "name",
-	Domain: "domain",
+	Id:              "id",
+	Slug:            "slug",
+	Name:            "name",
+	Domain:          "domain",
 	DomainExpiresAt: "domain_expires_at",
-	Plan: "plan",
-	Theme: "theme",
-	Status: "status",
-	Dirty: "dirty",
-	PublishedAt: "published_at",
-	PublishedRef: "published_ref",
+	Plan:            "plan",
+	Theme:           "theme",
+	Status:          "status",
+	Dirty:           "dirty",
+	PublishedAt:     "published_at",
+	PublishedRef:    "published_ref",
 }
 
 func ReadOneSite(qb *orm.QB, model *Site) (*Site, error) {
@@ -116,10 +140,10 @@ func ReadAllSite(qb *orm.QB) (SiteList, error) {
 }
 
 type SiteMember struct {
-	Id string
+	Id     string
 	SiteId string
 	UserId string
-	Role int64
+	Role   int64
 }
 
 func (m *SiteMember) ModelName() string { return "site_member" }
@@ -138,20 +162,28 @@ func (m *SiteMember) EncodeFields(w model.FieldWriter) {
 }
 
 func (m *SiteMember) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok { m.Id = v }
-	if v, ok := r.String("site_id"); ok { m.SiteId = v }
-	if v, ok := r.String("user_id"); ok { m.UserId = v }
-	if v, ok := r.Int("role"); ok { m.Role = v }
+	if v, ok := r.String("id"); ok {
+		m.Id = v
+	}
+	if v, ok := r.String("site_id"); ok {
+		m.SiteId = v
+	}
+	if v, ok := r.String("user_id"); ok {
+		m.UserId = v
+	}
+	if v, ok := r.Int("role"); ok {
+		m.Role = v
+	}
 }
 
 type SiteMemberList []*SiteMember
 
-func (s *SiteMemberList) Schema() []model.Field { return nil }
-func (s *SiteMemberList) Pointers() []any     { return nil }
-func (s *SiteMemberList) Len() int             { return len(*s) }
-func (s *SiteMemberList) At(i int) model.Fielder { return (*s)[i] }
-func (s *SiteMemberList) Append() model.Fielder  { v := &SiteMember{}; *s = append(*s, v); return v }
-func (s *SiteMemberList) IsNil() bool          { return s == nil }
+func (s *SiteMemberList) Schema() []model.Field            { return nil }
+func (s *SiteMemberList) Pointers() []any                  { return nil }
+func (s *SiteMemberList) Len() int                         { return len(*s) }
+func (s *SiteMemberList) At(i int) model.Fielder           { return (*s)[i] }
+func (s *SiteMemberList) Append() model.Fielder            { v := &SiteMember{}; *s = append(*s, v); return v }
+func (s *SiteMemberList) IsNil() bool                      { return s == nil }
 func (s *SiteMemberList) EncodeFields(_ model.FieldWriter) {}
 func (s *SiteMemberList) DecodeFields(_ model.FieldReader) {}
 
@@ -160,15 +192,15 @@ func (m *SiteMember) Validate(action byte) error {
 }
 
 var SiteMember_ = struct {
-	Id string
+	Id     string
 	SiteId string
 	UserId string
-	Role string
+	Role   string
 }{
-	Id: "id",
+	Id:     "id",
 	SiteId: "site_id",
 	UserId: "user_id",
-	Role: "role",
+	Role:   "role",
 }
 
 func ReadOneSiteMember(qb *orm.QB, model *SiteMember) (*SiteMember, error) {
@@ -195,9 +227,9 @@ func (m *SiteMember) SchemaExt() []model.FieldExt {
 }
 
 type Plan struct {
-	Name string
-	MaxPages int64
-	MaxImages int64
+	Name         string
+	MaxPages     int64
+	MaxImages    int64
 	CustomDomain bool
 }
 
@@ -217,20 +249,28 @@ func (m *Plan) EncodeFields(w model.FieldWriter) {
 }
 
 func (m *Plan) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("name"); ok { m.Name = v }
-	if v, ok := r.Int("max_pages"); ok { m.MaxPages = v }
-	if v, ok := r.Int("max_images"); ok { m.MaxImages = v }
-	if v, ok := r.Bool("custom_domain"); ok { m.CustomDomain = v }
+	if v, ok := r.String("name"); ok {
+		m.Name = v
+	}
+	if v, ok := r.Int("max_pages"); ok {
+		m.MaxPages = v
+	}
+	if v, ok := r.Int("max_images"); ok {
+		m.MaxImages = v
+	}
+	if v, ok := r.Bool("custom_domain"); ok {
+		m.CustomDomain = v
+	}
 }
 
 type PlanList []*Plan
 
-func (s *PlanList) Schema() []model.Field { return nil }
-func (s *PlanList) Pointers() []any     { return nil }
-func (s *PlanList) Len() int             { return len(*s) }
-func (s *PlanList) At(i int) model.Fielder { return (*s)[i] }
-func (s *PlanList) Append() model.Fielder  { v := &Plan{}; *s = append(*s, v); return v }
-func (s *PlanList) IsNil() bool          { return s == nil }
+func (s *PlanList) Schema() []model.Field            { return nil }
+func (s *PlanList) Pointers() []any                  { return nil }
+func (s *PlanList) Len() int                         { return len(*s) }
+func (s *PlanList) At(i int) model.Fielder           { return (*s)[i] }
+func (s *PlanList) Append() model.Fielder            { v := &Plan{}; *s = append(*s, v); return v }
+func (s *PlanList) IsNil() bool                      { return s == nil }
 func (s *PlanList) EncodeFields(_ model.FieldWriter) {}
 func (s *PlanList) DecodeFields(_ model.FieldReader) {}
 
@@ -239,14 +279,14 @@ func (m *Plan) Validate(action byte) error {
 }
 
 var Plan_ = struct {
-	Name string
-	MaxPages string
-	MaxImages string
+	Name         string
+	MaxPages     string
+	MaxImages    string
 	CustomDomain string
 }{
-	Name: "name",
-	MaxPages: "max_pages",
-	MaxImages: "max_images",
+	Name:         "name",
+	MaxPages:     "max_pages",
+	MaxImages:    "max_images",
 	CustomDomain: "custom_domain",
 }
 
@@ -268,19 +308,21 @@ func ReadAllPlan(qb *orm.QB) (PlanList, error) {
 }
 
 type AccessRequest struct {
-	Id string
-	Email string
-	Name string
-	Message string
+	Id        string
+	Email     string
+	Name      string
+	Message   string
 	CreatedAt int64
-	Status int64
+	Status    int64
 }
 
 func (m *AccessRequest) ModelName() string { return "access_request" }
 
 func (m *AccessRequest) Schema() []model.Field { return AccessRequestModel.Fields }
 
-func (m *AccessRequest) Pointers() []any { return []any{&m.Id, &m.Email, &m.Name, &m.Message, &m.CreatedAt, &m.Status} }
+func (m *AccessRequest) Pointers() []any {
+	return []any{&m.Id, &m.Email, &m.Name, &m.Message, &m.CreatedAt, &m.Status}
+}
 
 func (m *AccessRequest) IsNil() bool { return m == nil }
 
@@ -294,22 +336,38 @@ func (m *AccessRequest) EncodeFields(w model.FieldWriter) {
 }
 
 func (m *AccessRequest) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok { m.Id = v }
-	if v, ok := r.String("email"); ok { m.Email = v }
-	if v, ok := r.String("name"); ok { m.Name = v }
-	if v, ok := r.String("message"); ok { m.Message = v }
-	if v, ok := r.Int("created_at"); ok { m.CreatedAt = v }
-	if v, ok := r.Int("status"); ok { m.Status = v }
+	if v, ok := r.String("id"); ok {
+		m.Id = v
+	}
+	if v, ok := r.String("email"); ok {
+		m.Email = v
+	}
+	if v, ok := r.String("name"); ok {
+		m.Name = v
+	}
+	if v, ok := r.String("message"); ok {
+		m.Message = v
+	}
+	if v, ok := r.Int("created_at"); ok {
+		m.CreatedAt = v
+	}
+	if v, ok := r.Int("status"); ok {
+		m.Status = v
+	}
 }
 
 type AccessRequestList []*AccessRequest
 
-func (s *AccessRequestList) Schema() []model.Field { return nil }
-func (s *AccessRequestList) Pointers() []any     { return nil }
-func (s *AccessRequestList) Len() int             { return len(*s) }
+func (s *AccessRequestList) Schema() []model.Field  { return nil }
+func (s *AccessRequestList) Pointers() []any        { return nil }
+func (s *AccessRequestList) Len() int               { return len(*s) }
 func (s *AccessRequestList) At(i int) model.Fielder { return (*s)[i] }
-func (s *AccessRequestList) Append() model.Fielder  { v := &AccessRequest{}; *s = append(*s, v); return v }
-func (s *AccessRequestList) IsNil() bool          { return s == nil }
+func (s *AccessRequestList) Append() model.Fielder {
+	v := &AccessRequest{}
+	*s = append(*s, v)
+	return v
+}
+func (s *AccessRequestList) IsNil() bool                      { return s == nil }
 func (s *AccessRequestList) EncodeFields(_ model.FieldWriter) {}
 func (s *AccessRequestList) DecodeFields(_ model.FieldReader) {}
 
@@ -318,19 +376,19 @@ func (m *AccessRequest) Validate(action byte) error {
 }
 
 var AccessRequest_ = struct {
-	Id string
-	Email string
-	Name string
-	Message string
+	Id        string
+	Email     string
+	Name      string
+	Message   string
 	CreatedAt string
-	Status string
+	Status    string
 }{
-	Id: "id",
-	Email: "email",
-	Name: "name",
-	Message: "message",
+	Id:        "id",
+	Email:     "email",
+	Name:      "name",
+	Message:   "message",
 	CreatedAt: "created_at",
-	Status: "status",
+	Status:    "status",
 }
 
 func ReadOneAccessRequest(qb *orm.QB, model *AccessRequest) (*AccessRequest, error) {

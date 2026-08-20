@@ -25,20 +25,26 @@ func (s Status) String() string {
 	}
 }
 
+type transition struct {
+	from Status
+	to   Status
+}
+
+var validTransitions = []transition{
+	{from: StatusDraft, to: StatusLive},
+	{from: StatusLive, to: StatusSuspended},
+	{from: StatusSuspended, to: StatusLive},
+}
+
 func ValidateTransition(from, to Status) error {
 	if from == to {
 		return nil
 	}
-	valid := false
-	if from == StatusDraft && to == StatusLive {
-		valid = true
-	} else if from == StatusLive && to == StatusSuspended {
-		valid = true
-	} else if from == StatusSuspended && to == StatusLive {
-		valid = true
+	for i := 0; i < len(validTransitions); i++ {
+		t := validTransitions[i]
+		if t.from == from && t.to == to {
+			return nil
+		}
 	}
-	if !valid {
-		return fmt.Errf("site_manager: transicion invalida de %s a %s", from.String(), to.String())
-	}
-	return nil
+	return fmt.Errf("site_manager: transicion invalida de %s a %s", from.String(), to.String())
 }
