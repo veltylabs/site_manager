@@ -11,4 +11,6 @@ require (
 	github.com/tinywasm/time v0.5.3
 )
 
-require github.com/tinywasm/storage v0.0.4 // indirect
+require github.com/tinywasm/storage v0.0.4
+
+require github.com/tinywasm/json v0.5.17 // indirect
