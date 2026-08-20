@@ -3,6 +3,8 @@ PLAN: "feat: registro de sitios, membresias y solicitudes de acceso"
 TAG: v0.1.0
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 12430331083740875379
 ---
 
 > Este plan se despacha con el flujo CodeJob. Ver skill: agents-workflow.
