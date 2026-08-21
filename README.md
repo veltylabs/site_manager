@@ -10,6 +10,14 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Diagrama ERD de Base de Datos](docs/diagrams/database.md)
 
+## API Pública (Public API)
+
+### Publicación de Sitios
+
+- `MarkDirty(siteID string) error`: Marca el sitio como pendiente de publicar (`Dirty = true`). Es idempotente.
+- `DirtySites() (SiteList, error)`: Devuelve la lista de sitios pendientes de publicar, excluyendo los suspendidos.
+- `MarkPublished(siteID, ref string) error`: Registra una publicación exitosa, limpia `Dirty`, guarda la marca de tiempo `PublishedAt` y la referencia `PublishedRef`, y promueve el estado de `draft` a `live`.
+
 ## Operaciones (Ops)
 
 | Op Name | Recurso | Acción | Descripción |
@@ -21,6 +29,7 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 ## Archivos clave
 
 - `site.go` — Definición de `Site`, estados `Status` y transiciones válidas.
+- `publish.go` — Estado de publicación (`MarkDirty`, `DirtySites`, `MarkPublished`).
 - `member.go` — Definición de `SiteMember`, roles `Role`, y métodos `MemberOf` / `SitesOf`.
 - `plan.go` — Definición de límites del `Plan`.
 - `access.go` — Definición de `AccessRequest` y solicitudes de acceso.
@@ -29,6 +38,7 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 - `models.go` — Literales `model.Definition` para generación de código con `ormc`.
 - `models_orm.go` — Código ORM generado automáticamente.
 - `tests/conformance_test.go` — Suite completa de pruebas de conformidad e integración.
+- `tests/publish_test.go` — Pruebas del ciclo de publicación.
 
 ## Inicio Rápido
 

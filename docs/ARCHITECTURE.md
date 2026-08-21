@@ -13,6 +13,19 @@ Este módulo administra la identidad de los sitios web de los clientes, las memb
 
 ---
 
+## Ciclo de publicación
+
+`Status` y `Dirty` son **ejes independientes**:
+- `Status` describe el ciclo de vida comercial del sitio (`draft`, `live`, `suspended`).
+- `Dirty` describe si existen cambios guardados en la base de datos pendientes de ser publicados. Un sitio `live` puede estar `dirty` si el cliente modificó su contenido pero aún no se ha desplegado.
+
+Flujo de publicación:
+1. **El panel de administración (`misitio`)** llama a `MarkDirty(siteID)` cuando el cliente guarda un cambio de contenido.
+2. **El sistema de integración/despliegue continuo (CI)** consulta `DirtySites()` para obtener los sitios pendientes de publicación (excluyendo sitios suspendidos).
+3. **CI** compila/despliega el sitio y llama a `MarkPublished(siteID, ref)` registrando la fecha (`PublishedAt`) y referencia del commit (`PublishedRef`), limpiando el indicador `Dirty` y promoviendo el sitio a `live` si estaba en borrador (`draft`).
+
+---
+
 ## Entidades del Dominio
 
 1. **`Site`**: Registro de un sitio web de un cliente de Velty (`slug`, `name`, `domain`, `domain_expires_at`, `plan`, `theme`, `status`, `dirty`, `published_at`, `published_ref`).
