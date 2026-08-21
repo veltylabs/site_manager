@@ -85,3 +85,21 @@ func (m *Module) UpdateSiteStatus(siteID string, newStatus Status) error {
 	site.Status = int64(newStatus)
 	return m.db.Update(&site, orm.Eq(Site_.Id, siteID))
 }
+
+// SiteByID devuelve el sitio con ese id.
+func (m *Module) SiteByID(siteID string) (*Site, error) {
+	if siteID == "" {
+		return nil, ErrInvalidData
+	}
+
+	var site Site
+	err := m.db.Query(&site).Where(Site_.Id).Eq(siteID).ReadOne()
+	if err != nil {
+		if err == orm.ErrNotFound {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+
+	return &site, nil
+}

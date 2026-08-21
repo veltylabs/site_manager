@@ -12,6 +12,10 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 
 ## API Pública (Public API)
 
+- `SiteByID(siteID string) (*Site, error)`: Devuelve el sitio con ese id.
+- `CreatePlan(p *Plan) error`: Registra un plan con sus límites.
+- `PlanOf(siteID string) (Plan, error)`: Devuelve los límites del plan asignado al sitio.
+
 ### Publicación de Sitios
 
 - `MarkDirty(siteID string) error`: Marca el sitio como pendiente de publicar (`Dirty = true`). Es idempotente.
@@ -31,7 +35,7 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 - `site.go` — Definición de `Site`, estados `Status` y transiciones válidas.
 - `publish.go` — Estado de publicación (`MarkDirty`, `DirtySites`, `MarkPublished`).
 - `member.go` — Definición de `SiteMember`, roles `Role`, y métodos `MemberOf` / `SitesOf`.
-- `plan.go` — Definición de límites del `Plan`.
+- `plan.go` — Registro y consulta de límites del `Plan` (`CreatePlan`, `PlanOf`).
 - `access.go` — Definición de `AccessRequest` y solicitudes de acceso.
 - `module.go` — Estructura `Module`, constructor `New`, montado de `MountOps` y operaciones.
 - `errors.go` — Errores centinela del módulo.
