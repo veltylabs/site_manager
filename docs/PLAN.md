@@ -3,8 +3,9 @@ PLAN: "feat: marcar y limpiar el estado de publicación de un sitio"
 TAG: v0.2.0
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 6416245003097438977
+PR: https://github.com/veltylabs/site_manager/pull/2
 ---
 
 > Plan autocontenido: todo lo necesario para ejecutarlo está aquí.
