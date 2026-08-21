@@ -3,6 +3,8 @@ PLAN: "feat: leer un sitio por id y los límites de su plan"
 TAG: v0.3.0
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 3798858568747240777
 ---
 
 > Plan autocontenido: todo lo necesario para ejecutarlo está aquí.
