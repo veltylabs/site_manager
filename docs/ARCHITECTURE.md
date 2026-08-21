@@ -30,7 +30,7 @@ Flujo de publicación:
 
 1. **`Site`**: Registro de un sitio web de un cliente de Velty (`slug`, `name`, `domain`, `domain_expires_at`, `plan`, `theme`, `status`, `dirty`, `published_at`, `published_ref`).
 2. **`SiteMember`**: Relación entre un usuario (`user_id`) y un sitio (`site_id`) con su rol asignado (`role`).
-3. **`Plan`**: Definición de límites y capacidades (`max_pages`, `max_images`, `custom_domain`). Sin lógica de facturación ni precios.
+3. **`Plan`**: Definición de límites y capacidades (`max_pages`, `max_images`, `custom_domain`). Sin lógica de facturación ni precios. `Site.Plan` guarda el nombre del plan (la clave de `Plan`), y sus límites se consultan con `PlanOf(siteID)`.
 4. **`AccessRequest`**: Solicitudes de acceso iniciadas por prospectos o clientes (`email`, `name`, `message`, `status`, `created_at`).
 
 ---
