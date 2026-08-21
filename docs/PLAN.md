@@ -3,8 +3,9 @@ PLAN: "feat: leer un sitio por id y los límites de su plan"
 TAG: v0.3.0
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 3798858568747240777
+PR: https://github.com/veltylabs/site_manager/pull/3
 ---
 
 > Plan autocontenido: todo lo necesario para ejecutarlo está aquí.
