@@ -132,9 +132,9 @@ func ReadOneSite(qb *orm.QB, model *Site) (*Site, error) {
 
 func ReadAllSite(qb *orm.QB) (SiteList, error) {
 	var results SiteList
-	err := orm.ReadAll(qb,
-		func() *Site { return &Site{} },
-		func(m *Site) { results = append(results, m) },
+	err := qb.ReadAll(
+		func() model.Model { return &Site{} },
+		func(m model.Model) { results = append(results, m.(*Site)) },
 	)
 	return results, err
 }
@@ -213,9 +213,9 @@ func ReadOneSiteMember(qb *orm.QB, model *SiteMember) (*SiteMember, error) {
 
 func ReadAllSiteMember(qb *orm.QB) (SiteMemberList, error) {
 	var results SiteMemberList
-	err := orm.ReadAll(qb,
-		func() *SiteMember { return &SiteMember{} },
-		func(m *SiteMember) { results = append(results, m) },
+	err := qb.ReadAll(
+		func() model.Model { return &SiteMember{} },
+		func(m model.Model) { results = append(results, m.(*SiteMember)) },
 	)
 	return results, err
 }
@@ -300,9 +300,9 @@ func ReadOnePlan(qb *orm.QB, model *Plan) (*Plan, error) {
 
 func ReadAllPlan(qb *orm.QB) (PlanList, error) {
 	var results PlanList
-	err := orm.ReadAll(qb,
-		func() *Plan { return &Plan{} },
-		func(m *Plan) { results = append(results, m) },
+	err := qb.ReadAll(
+		func() model.Model { return &Plan{} },
+		func(m model.Model) { results = append(results, m.(*Plan)) },
 	)
 	return results, err
 }
@@ -401,9 +401,9 @@ func ReadOneAccessRequest(qb *orm.QB, model *AccessRequest) (*AccessRequest, err
 
 func ReadAllAccessRequest(qb *orm.QB) (AccessRequestList, error) {
 	var results AccessRequestList
-	err := orm.ReadAll(qb,
-		func() *AccessRequest { return &AccessRequest{} },
-		func(m *AccessRequest) { results = append(results, m) },
+	err := qb.ReadAll(
+		func() model.Model { return &AccessRequest{} },
+		func(m model.Model) { results = append(results, m.(*AccessRequest)) },
 	)
 	return results, err
 }

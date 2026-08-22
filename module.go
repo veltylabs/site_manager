@@ -55,7 +55,7 @@ func (m *Module) ModelName() string {
 func (m *Module) MountOps(reg router.OpRegistry) {
 	reg.Op("site_get", func(ctx router.Context) {
 		var s Site
-		if err := router.Decode(ctx, &s); err != nil {
+		if err := ctx.Decode(&s); err != nil {
 			ctx.WriteStatus(400)
 			return
 		}
@@ -63,12 +63,12 @@ func (m *Module) MountOps(reg router.OpRegistry) {
 			ctx.WriteStatus(404)
 			return
 		}
-		_ = router.Encode(ctx, &s)
+		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Read)
 
 	reg.Op("site_create", func(ctx router.Context) {
 		var s Site
-		if err := router.Decode(ctx, &s); err != nil {
+		if err := ctx.Decode(&s); err != nil {
 			ctx.WriteStatus(400)
 			return
 		}
@@ -76,12 +76,12 @@ func (m *Module) MountOps(reg router.OpRegistry) {
 			ctx.WriteStatus(400)
 			return
 		}
-		_ = router.Encode(ctx, &s)
+		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Create)
 
 	reg.Op("access_request", func(ctx router.Context) {
 		var req AccessRequest
-		if err := router.Decode(ctx, &req); err != nil {
+		if err := ctx.Decode(&req); err != nil {
 			ctx.WriteStatus(400)
 			return
 		}
@@ -90,6 +90,6 @@ func (m *Module) MountOps(reg router.OpRegistry) {
 			ctx.WriteStatus(400)
 			return
 		}
-		_ = router.Encode(ctx, &createdReq)
+		_ = ctx.Encode(&createdReq)
 	}).Public()
 }
