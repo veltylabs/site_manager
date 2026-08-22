@@ -3,6 +3,8 @@ PLAN: "feat: PendingRequests y RequestByID sobre AccessRequest"
 TAG: v0.4.0
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 17612746035528647813
 ---
 
 > Este plan se despacha con el flujo CodeJob. Ver skill: agents-workflow.
