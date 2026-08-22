@@ -71,3 +71,31 @@ func (m *Module) AcceptRequest(id string) error {
 	req.Status = int64(RequestAccepted)
 	return m.db.Update(&req, orm.Eq(AccessRequest_.Id, id))
 }
+
+// PendingRequests devuelve las solicitudes de acceso sin resolver, de la más
+// antigua a la más reciente.
+// Nota: Deja el orden natural de inserción que en mem/D1 coincide con el de creación.
+func (m *Module) PendingRequests() ([]AccessRequest, error) {
+	rows, err := ReadAllAccessRequest(
+		m.db.Query(&AccessRequest{}).
+			Where(AccessRequest_.Status).Eq(int64(RequestPending)),
+	)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]AccessRequest, len(rows))
+	for i := range rows {
+		out[i] = *rows[i]
+	}
+	return out, nil
+}
+
+// RequestByID devuelve la solicitud de acceso con ese id.
+func (m *Module) RequestByID(id string) (AccessRequest, error) {
+	var req AccessRequest
+	err := m.db.Query(&req).Where(AccessRequest_.Id).Eq(id).ReadOne()
+	if err != nil {
+		return AccessRequest{}, err
+	}
+	return req, nil
+}
