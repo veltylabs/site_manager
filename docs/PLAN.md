@@ -2,8 +2,9 @@
 PLAN: "fix: los ops leian cualquier sitio sin comprobar pertenencia"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 8672192147222686395
+PR: https://github.com/veltylabs/site_manager/pull/5
 ---
 
 > Este plan se despacha con el flujo CodeJob. Ver skill: agents-workflow.
