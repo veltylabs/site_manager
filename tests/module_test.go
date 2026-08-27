@@ -191,8 +191,8 @@ func TestMountOpsSiteCreateAllowsAuthorizedCaller(t *testing.T) {
 	ctx.SetUserID("owner1")
 	reg.Invoke("OP", "/site_create", ctx)
 
-	if ctx.Status == 403 || ctx.Status == 400 {
-		t.Fatalf("expected authorized site_create to succeed, got status %d body %s", ctx.Status, ctx.ResponseBody())
+	if ctx.Status != 201 {
+		t.Fatalf("expected authorized site_create to succeed with status 201, got status %d body %s", ctx.Status, ctx.ResponseBody())
 	}
 	if len(ctx.ResponseBody()) == 0 {
 		t.Fatal("expected a non-empty response body for created site")
@@ -202,15 +202,134 @@ func TestMountOpsSiteCreateAllowsAuthorizedCaller(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SitesOf: %v", err)
 	}
-	if len(sites) != 0 {
-		// site_create no agrega membresia: eso es responsabilidad de AddMember,
-		// llamado aparte. Confirmamos que no se creo una de forma implicita.
-		t.Fatalf("expected site_create to not create a membership as a side effect, got %d sites for owner1", len(sites))
+	if len(sites) != 1 {
+		t.Fatalf("expected site_create to add caller as member, got %d sites for owner1", len(sites))
 	}
 }
 
-// access_request esta anotado Public: debe responder sin identidad.
-func TestMountOpsAccessRequestIsPublic(t *testing.T) {
+func TestSiteGetDeniesNonMember(t *testing.T) {
+	m, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
+		return r == model.Resource("site") && a == model.Read
+	})
+
+	site := &sitemanager.Site{Slug: "site1", Name: "Site 1", Theme: "landing"}
+	if err := m.CreateSite(site); err != nil {
+		t.Fatalf("CreateSite: %v", err)
+	}
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"id":"` + site.Id + `"}`),
+	}
+	ctx.SetUserID("nonmember")
+	reg.Invoke("OP", "/site_get", ctx)
+
+	if ctx.Status != 403 {
+		t.Fatalf("expected 403 for non-member site_get, got %d", ctx.Status)
+	}
+}
+
+func TestSiteGetAllowsMember(t *testing.T) {
+	m, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
+		return r == model.Resource("site") && a == model.Read
+	})
+
+	site := &sitemanager.Site{Slug: "site2", Name: "Site 2", Theme: "landing"}
+	if err := m.CreateSite(site); err != nil {
+		t.Fatalf("CreateSite: %v", err)
+	}
+
+	if _, err := m.AddMember(site.Id, "member1", sitemanager.RoleViewer); err != nil {
+		t.Fatalf("AddMember: %v", err)
+	}
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"id":"` + site.Id + `"}`),
+	}
+	ctx.SetUserID("member1")
+	reg.Invoke("OP", "/site_get", ctx)
+
+	if ctx.Status != 200 && ctx.Status != 0 {
+		t.Fatalf("expected 200 (or implicit 0 from WriteStatus not being called) for member site_get, got %d", ctx.Status)
+	}
+	if len(ctx.ResponseBody()) == 0 {
+		t.Fatal("expected non-empty response body for member site_get")
+	}
+}
+
+func TestSiteGetRejectsAnonymous(t *testing.T) {
+	_, reg := setupRouter(t, nil)
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"id":"site-id"}`),
+	}
+	reg.Invoke("OP", "/site_get", ctx)
+
+	if ctx.Status != 401 && ctx.Status != 403 {
+		t.Fatalf("expected 401 or 403 for anonymous site_get, got %d", ctx.Status)
+	}
+}
+
+func TestSiteGetRejectsEmptyID(t *testing.T) {
+	_, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
+		return true
+	})
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"id":""}`),
+	}
+	ctx.SetUserID("user1")
+	reg.Invoke("OP", "/site_get", ctx)
+
+	if ctx.Status != 400 {
+		t.Fatalf("expected 400 for empty id site_get, got %d", ctx.Status)
+	}
+}
+
+func TestSiteCreateAddsOwner(t *testing.T) {
+	m, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
+		return true
+	})
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"slug":"owner-test","name":"Owner Test","theme":"landing"}`),
+	}
+	ctx.SetUserID("creator1")
+	reg.Invoke("OP", "/site_create", ctx)
+
+	if ctx.Status != 201 {
+		t.Fatalf("expected 201 for site_create, got %d", ctx.Status)
+	}
+
+	sites, err := m.SitesOf("creator1")
+	if err != nil {
+		t.Fatalf("SitesOf: %v", err)
+	}
+	if len(sites) != 1 {
+		t.Fatalf("expected 1 site for creator1, got %d", len(sites))
+	}
+	role, ok := m.MemberOf("creator1", sites[0].Id)
+	if !ok || role != sitemanager.RoleOwner {
+		t.Fatalf("expected RoleOwner for site creator, got role %v, ok %v", role, ok)
+	}
+}
+
+func TestSiteCreateReturns201(t *testing.T) {
+	_, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
+		return true
+	})
+
+	ctx := &mockrouter.Context{
+		InBody: []byte(`{"slug":"return-201","name":"Return 201","theme":"landing"}`),
+	}
+	ctx.SetUserID("creator2")
+	reg.Invoke("OP", "/site_create", ctx)
+
+	if ctx.Status != 201 {
+		t.Fatalf("expected status 201 for site_create, got %d", ctx.Status)
+	}
+}
+
+func TestAccessRequestRejectsAnonymous(t *testing.T) {
 	_, reg := setupRouter(t, nil)
 
 	ctx := &mockrouter.Context{
@@ -218,26 +337,41 @@ func TestMountOpsAccessRequestIsPublic(t *testing.T) {
 	}
 	reg.Invoke("OP", "/access_request", ctx)
 
-	if ctx.Status == 403 {
-		t.Fatal("expected access_request to be reachable without identity, got 403")
-	}
-	if len(ctx.ResponseBody()) == 0 {
-		t.Fatal("expected a non-empty response body for the created access request")
+	if ctx.Status != 403 {
+		t.Fatalf("expected 403 for anonymous access_request, got %d", ctx.Status)
 	}
 }
 
-func TestMountOpsSiteGetNotFound(t *testing.T) {
+func TestAccessRequestAllowsAuthenticated(t *testing.T) {
 	_, reg := setupRouter(t, func(userID string, r model.Resource, a model.Action) bool {
-		return true
+		return false // No resource roles granted
 	})
 
 	ctx := &mockrouter.Context{
-		InBody: []byte(`{"id":"does-not-exist"}`),
+		InBody: []byte(`{"email":"prospect@example.com","name":"Prospect","message":"hola"}`),
 	}
-	ctx.SetUserID("someone")
-	reg.Invoke("OP", "/site_get", ctx)
+	ctx.SetUserID("auth_user")
+	reg.Invoke("OP", "/access_request", ctx)
 
-	if ctx.Status != 404 {
-		t.Fatalf("expected 404 for a missing site, got %d", ctx.Status)
+	if ctx.Status == 403 || ctx.Status == 401 {
+		t.Fatalf("expected authenticated access_request to succeed, got status %d", ctx.Status)
+	}
+	if len(ctx.ResponseBody()) == 0 {
+		t.Fatal("expected non-empty response body for access_request")
+	}
+}
+
+func TestOpsDeclareArgs(t *testing.T) {
+	_, reg := setupRouter(t, nil)
+
+	routes := reg.Routes()
+	if len(routes) == 0 {
+		t.Fatal("expected registered routes, got 0")
+	}
+
+	for _, route := range routes {
+		if route.Args == nil {
+			t.Fatalf("route %s has nil Args", route.Path)
+		}
 	}
 }

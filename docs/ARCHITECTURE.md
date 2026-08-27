@@ -35,13 +35,28 @@ Flujo de publicación:
 
 ---
 
+## Control de Acceso (Dos Mitades)
+
+El control de acceso en las operaciones (`Ops`) de este módulo se compone de **dos mitades independientes y complementarias**:
+
+1. **Gate del Enrutador (RBAC general):** La declaración `.Requires(model.Resource("site"), model.Read)` o `.Requires(model.Resource("site"), model.Create)` verifica que el llamante posea el permiso general sobre el recurso.
+2. **Pertenencia por Fila (Tenant Isolation):** En operaciones sobre sitios específicos como `site_get`, se valida adicionalmente la pertenencia utilizando `m.MemberOf(userID, siteID)`. Sin esta comprobación, un usuario con permiso de lectura sobre el recurso `site` podría leer sitios pertenecientes a otros inquilinos.
+
+Ambas comprobaciones son necesarias y ninguna sustituye a la otra. Asimismo, la creación de sitios mediante `site_create` asigna al llamante (`ctx.UserID()`) como propietario (`owner`) a través de `AddMember` para evitar que un sitio nazca sin administrador.
+
+### Residual de `access_request`
+
+La operación `access_request` requiere autenticación (`.Authenticated()`), garantizando que la solicitud provenga de un llamante autenticado. Actualmente, el correo se recibe en el cuerpo de la petición (`AccessRequest.Email`), por lo que un llamante autenticado técnicamente puede enviar una solicitud a nombre de otra dirección de correo. Cerrar este vector requiere exponer el correo verificado a través de `router.Context` (el cual actualmente solo expone `UserID()`), lo cual debe ser abordado aguas arriba en el contrato del enrutador y no mediante una solución local duplicada.
+
+---
+
 ## Tabla de Operaciones (Ops)
 
 | Nombre de Op | Recurso RBAC | Acción RBAC | Descripción |
 |---|---|---|---|
-| `site_get` | `site` | `read` | Obtiene la información de un sitio por ID |
-| `site_create` | `site` | `create` | Crea un nuevo sitio asegurando unicidad de slug |
-| `access_request` | Público | - | Registra una solicitud de acceso idempotente por correo |
+| `site_get` | `site` | `read` | Obtiene la información de un sitio por ID previa verificación de pertenencia (`403` si no es miembro) |
+| `site_create` | `site` | `create` | Crea un nuevo sitio asegurando unicidad de slug y asignando al creador como dueño (`201 Created`) |
+| `access_request` | Authenticated | - | Registra una solicitud de acceso para usuarios autenticados |
 
 ---
 
