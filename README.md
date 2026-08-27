@@ -26,9 +26,9 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 
 | Op Name | Recurso | Acción | Descripción |
 |---|---|---|---|
-| `site_get` | `site` | `read` | Consulta de sitio por ID |
-| `site_create` | `site` | `create` | Creación de sitio con verificación de slug |
-| `access_request` | Public | - | Registro de solicitud de acceso |
+| `site_get` | `site` | `read` | Consulta de sitio por ID (filtra por pertenencia) |
+| `site_create` | `site` | `create` | Creación de sitio con asignación de propietario (201 Created) |
+| `access_request` | Authenticated | - | Registro de solicitud de acceso para usuarios autenticados |
 
 ## Archivos clave
 
