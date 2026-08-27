@@ -2,6 +2,8 @@
 PLAN: "fix: los ops leian cualquier sitio sin comprobar pertenencia"
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 8672192147222686395
 ---
 
 > Este plan se despacha con el flujo CodeJob. Ver skill: agents-workflow.
