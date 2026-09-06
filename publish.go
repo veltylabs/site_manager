@@ -1,8 +1,8 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/orm"
-	"github.com/tinywasm/time"
+	"webtyp.com/orm"
+	"webtyp.com/time"
 )
 
 // MarkDirty marca el sitio como pendiente de publicar. Es idempotente: si ya

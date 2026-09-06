@@ -3,9 +3,9 @@ package tests
 import (
 	"testing"
 
-	"github.com/tinywasm/fmt"
-	"github.com/tinywasm/orm"
-	"github.com/tinywasm/storage/mem"
+	"webtyp.com/fmt"
+	"webtyp.com/orm"
+	"webtyp.com/storage/mem"
 	sitemanager "github.com/veltylabs/site_manager"
 )
 

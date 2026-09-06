@@ -1,10 +1,10 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/ddl"
-	"github.com/tinywasm/model"
-	"github.com/tinywasm/orm"
-	"github.com/tinywasm/router"
+	"webtyp.com/ddl"
+	"webtyp.com/model"
+	"webtyp.com/orm"
+	"webtyp.com/router"
 )
 
 var _ router.OpModule = (*Module)(nil)

@@ -1,7 +1,7 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/orm"
+	"webtyp.com/orm"
 )
 
 // CreatePlan registra un plan con sus límites.

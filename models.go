@@ -1,7 +1,7 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/model"
+	"webtyp.com/model"
 )
 
 var SiteModel = model.Definition{

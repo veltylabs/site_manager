@@ -3,10 +3,10 @@ package tests
 import (
 	"testing"
 
-	"github.com/tinywasm/model"
-	"github.com/tinywasm/orm"
-	mockrouter "github.com/tinywasm/router/mock"
-	"github.com/tinywasm/storage/mem"
+	"webtyp.com/model"
+	"webtyp.com/orm"
+	mockrouter "webtyp.com/router/mock"
+	"webtyp.com/storage/mem"
 	sitemanager "github.com/veltylabs/site_manager"
 )
 

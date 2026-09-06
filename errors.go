@@ -1,7 +1,7 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/fmt"
+	"webtyp.com/fmt"
 )
 
 var (

@@ -50,8 +50,8 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 package main
 
 import (
-	"github.com/tinywasm/orm"
-	"github.com/tinywasm/storage/mem"
+	"github.com/webtyp/orm"
+	"github.com/webtyp/storage/mem"
 	sitemanager "github.com/veltylabs/site_manager"
 )
 

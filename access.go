@@ -1,8 +1,8 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/orm"
-	"github.com/tinywasm/time"
+	"webtyp.com/orm"
+	"webtyp.com/time"
 )
 
 type RequestStatus uint8

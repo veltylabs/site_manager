@@ -1,8 +1,8 @@
 package sitemanager
 
 import (
-	"github.com/tinywasm/fmt"
-	"github.com/tinywasm/orm"
+	"webtyp.com/fmt"
+	"webtyp.com/orm"
 )
 
 type Status uint8
