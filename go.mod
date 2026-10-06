@@ -1,6 +1,6 @@
 module github.com/veltylabs/site_manager
 
-go 1.25.2
+go 1.26.8
 
 require (
 	webtyp.com/ddl v0.0.15
@@ -13,4 +13,7 @@ require (
 
 require webtyp.com/storage v0.0.7
 
-require webtyp.com/json v0.5.27 // indirect
+require (
+	webtyp.com/escape v0.1.0 // indirect
+	webtyp.com/json v0.5.29 // indirect
+)
