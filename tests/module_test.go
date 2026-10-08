@@ -375,3 +375,22 @@ func TestOpsDeclareArgs(t *testing.T) {
 		}
 	}
 }
+
+func TestDomainErrorText(t *testing.T) {
+	cases := []struct {
+		err  error
+		text string
+	}{
+		{sitemanager.ErrNotFound, "site_manager not found"},
+		{sitemanager.ErrAlreadyExists, "site_manager already exists"},
+		{sitemanager.ErrInvalidTransition, "site_manager invalid transition"},
+		{sitemanager.ErrInvalidData, "site_manager invalid data"},
+		{sitemanager.ErrNilDependency, "site_manager nil dependency"},
+	}
+
+	for _, c := range cases {
+		if got := c.err.Error(); got != c.text {
+			t.Errorf("error text mismatch: got %q, want %q", got, c.text)
+		}
+	}
+}

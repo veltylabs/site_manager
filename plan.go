@@ -14,7 +14,7 @@ func (m *Module) CreatePlan(p *Plan) error {
 	err := m.db.Query(&existing).Where(Plan_.Name).Eq(p.Name).ReadOne()
 	if err == nil {
 		return ErrAlreadyExists
-	} else if err != orm.ErrNotFound {
+	} else if !orm.IsNotFound(err) {
 		return err
 	}
 
@@ -35,7 +35,7 @@ func (m *Module) PlanOf(siteID string) (Plan, error) {
 	var plan Plan
 	err = m.db.Query(&plan).Where(Plan_.Name).Eq(site.Plan).ReadOne()
 	if err != nil {
-		if err == orm.ErrNotFound {
+		if orm.IsNotFound(err) {
 			return Plan{}, ErrNotFound
 		}
 		return Plan{}, err
