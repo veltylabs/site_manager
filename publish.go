@@ -15,7 +15,7 @@ func (m *Module) MarkDirty(siteID string) error {
 	var site Site
 	err := m.db.Query(&site).Where(Site_.Id).Eq(siteID).ReadOne()
 	if err != nil {
-		if err == orm.ErrNotFound {
+		if orm.IsNotFound(err) {
 			return ErrNotFound
 		}
 		return err
@@ -54,7 +54,7 @@ func (m *Module) MarkPublished(siteID, ref string) error {
 	var site Site
 	err := m.db.Query(&site).Where(Site_.Id).Eq(siteID).ReadOne()
 	if err != nil {
-		if err == orm.ErrNotFound {
+		if orm.IsNotFound(err) {
 			return ErrNotFound
 		}
 		return err

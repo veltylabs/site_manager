@@ -95,7 +95,7 @@ func (m *Module) SiteByID(siteID string) (*Site, error) {
 	var site Site
 	err := m.db.Query(&site).Where(Site_.Id).Eq(siteID).ReadOne()
 	if err != nil {
-		if err == orm.ErrNotFound {
+		if orm.IsNotFound(err) {
 			return nil, ErrNotFound
 		}
 		return nil, err
