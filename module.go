@@ -7,7 +7,7 @@ import (
 	"webtyp.com/router"
 )
 
-var _ router.OpModule = (*Module)(nil)
+var _ router.OperationModule = (*Module)(nil)
 
 type Deps struct {
 	DB  *orm.DB
@@ -52,8 +52,8 @@ func (m *Module) ModelName() string {
 	return "site"
 }
 
-func (m *Module) MountOps(reg router.OpRegistry) {
-	reg.Op("site_get", func(ctx router.Context) {
+func (m *Module) MountOperations(reg router.OperationRegistry) {
+	reg.Operation("site_get", func(ctx router.Context) {
 		userID := ctx.UserID()
 		if userID == "" {
 			ctx.WriteStatus(401)
@@ -82,7 +82,7 @@ func (m *Module) MountOps(reg router.OpRegistry) {
 		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Read).Accepts(&Site{})
 
-	reg.Op("site_create", func(ctx router.Context) {
+	reg.Operation("site_create", func(ctx router.Context) {
 		userID := ctx.UserID()
 		if userID == "" {
 			ctx.WriteStatus(401)
@@ -109,7 +109,7 @@ func (m *Module) MountOps(reg router.OpRegistry) {
 		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Create).Accepts(&Site{})
 
-	reg.Op("access_request", func(ctx router.Context) {
+	reg.Operation("access_request", func(ctx router.Context) {
 		var req AccessRequest
 		if err := ctx.Decode(&req); err != nil {
 			ctx.WriteStatus(400)

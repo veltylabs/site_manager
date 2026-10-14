@@ -155,13 +155,13 @@ func TestUpdateSiteStatusValidTransitionPersists(t *testing.T) {
 	}
 }
 
-// -- MountOps / router.OpModule contract --------------------------------------
+// -- MountOps / router.OperationModule contract --------------------------------------
 
 func setupRouter(t *testing.T, authorize model.Authorizer) (*sitemanager.Module, *mockrouter.Router) {
 	m, _ := setupModule(t)
 	reg := &mockrouter.Router{}
 	reg.Configure(mockrouter.Config{Authorize: authorize})
-	m.MountOps(reg)
+	m.MountOperations(reg)
 	return m, reg
 }
 
