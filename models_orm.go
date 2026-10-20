@@ -5,6 +5,7 @@ package sitemanager
 import (
 	"webtyp.com/model"
 	"webtyp.com/orm"
+	"webtyp.com/time"
 )
 
 type Site struct {
@@ -12,12 +13,12 @@ type Site struct {
 	Slug            string
 	Name            string
 	Domain          string
-	DomainExpiresAt int64
+	DomainExpiresAt time.Unix
 	Plan            string
 	Theme           string
 	Status          int64
 	Dirty           bool
-	PublishedAt     int64
+	PublishedAt     time.Unix
 	PublishedRef    string
 }
 
@@ -26,7 +27,7 @@ func (m *Site) ModelName() string { return "site" }
 func (m *Site) Schema() []model.Field { return SiteModel.Fields }
 
 func (m *Site) Pointers() []any {
-	return []any{&m.Id, &m.Slug, &m.Name, &m.Domain, &m.DomainExpiresAt, &m.Plan, &m.Theme, &m.Status, &m.Dirty, &m.PublishedAt, &m.PublishedRef}
+	return []any{&m.Id, &m.Slug, &m.Name, &m.Domain, (*int64)(&m.DomainExpiresAt), &m.Plan, &m.Theme, &m.Status, &m.Dirty, (*int64)(&m.PublishedAt), &m.PublishedRef}
 }
 
 func (m *Site) IsNil() bool { return m == nil }
@@ -36,12 +37,12 @@ func (m *Site) EncodeFields(w model.FieldWriter) {
 	w.String("slug", m.Slug)
 	w.String("name", m.Name)
 	w.String("domain", m.Domain)
-	w.Int("domain_expires_at", m.DomainExpiresAt)
+	w.Int("domain_expires_at", int64(m.DomainExpiresAt))
 	w.String("plan", m.Plan)
 	w.String("theme", m.Theme)
 	w.Int("status", m.Status)
 	w.Bool("dirty", m.Dirty)
-	w.Int("published_at", m.PublishedAt)
+	w.Int("published_at", int64(m.PublishedAt))
 	w.String("published_ref", m.PublishedRef)
 }
 
@@ -59,7 +60,7 @@ func (m *Site) DecodeFields(r model.FieldReader) {
 		m.Domain = v
 	}
 	if v, ok := r.Int("domain_expires_at"); ok {
-		m.DomainExpiresAt = v
+		m.DomainExpiresAt = time.Unix(v)
 	}
 	if v, ok := r.String("plan"); ok {
 		m.Plan = v
@@ -74,7 +75,7 @@ func (m *Site) DecodeFields(r model.FieldReader) {
 		m.Dirty = v
 	}
 	if v, ok := r.Int("published_at"); ok {
-		m.PublishedAt = v
+		m.PublishedAt = time.Unix(v)
 	}
 	if v, ok := r.String("published_ref"); ok {
 		m.PublishedRef = v
@@ -83,8 +84,6 @@ func (m *Site) DecodeFields(r model.FieldReader) {
 
 type SiteList []*Site
 
-func (s *SiteList) Schema() []model.Field            { return nil }
-func (s *SiteList) Pointers() []any                  { return nil }
 func (s *SiteList) Len() int                         { return len(*s) }
 func (s *SiteList) At(i int) model.Fielder           { return (*s)[i] }
 func (s *SiteList) Append() model.Fielder            { v := &Site{}; *s = append(*s, v); return v }
@@ -178,8 +177,6 @@ func (m *SiteMember) DecodeFields(r model.FieldReader) {
 
 type SiteMemberList []*SiteMember
 
-func (s *SiteMemberList) Schema() []model.Field            { return nil }
-func (s *SiteMemberList) Pointers() []any                  { return nil }
 func (s *SiteMemberList) Len() int                         { return len(*s) }
 func (s *SiteMemberList) At(i int) model.Fielder           { return (*s)[i] }
 func (s *SiteMemberList) Append() model.Fielder            { v := &SiteMember{}; *s = append(*s, v); return v }
@@ -265,8 +262,6 @@ func (m *Plan) DecodeFields(r model.FieldReader) {
 
 type PlanList []*Plan
 
-func (s *PlanList) Schema() []model.Field            { return nil }
-func (s *PlanList) Pointers() []any                  { return nil }
 func (s *PlanList) Len() int                         { return len(*s) }
 func (s *PlanList) At(i int) model.Fielder           { return (*s)[i] }
 func (s *PlanList) Append() model.Fielder            { v := &Plan{}; *s = append(*s, v); return v }
@@ -312,7 +307,7 @@ type AccessRequest struct {
 	Email     string
 	Name      string
 	Message   string
-	CreatedAt int64
+	CreatedAt time.Unix
 	Status    int64
 }
 
@@ -321,7 +316,7 @@ func (m *AccessRequest) ModelName() string { return "access_request" }
 func (m *AccessRequest) Schema() []model.Field { return AccessRequestModel.Fields }
 
 func (m *AccessRequest) Pointers() []any {
-	return []any{&m.Id, &m.Email, &m.Name, &m.Message, &m.CreatedAt, &m.Status}
+	return []any{&m.Id, &m.Email, &m.Name, &m.Message, (*int64)(&m.CreatedAt), &m.Status}
 }
 
 func (m *AccessRequest) IsNil() bool { return m == nil }
@@ -331,7 +326,7 @@ func (m *AccessRequest) EncodeFields(w model.FieldWriter) {
 	w.String("email", m.Email)
 	w.String("name", m.Name)
 	w.String("message", m.Message)
-	w.Int("created_at", m.CreatedAt)
+	w.Int("created_at", int64(m.CreatedAt))
 	w.Int("status", m.Status)
 }
 
@@ -349,7 +344,7 @@ func (m *AccessRequest) DecodeFields(r model.FieldReader) {
 		m.Message = v
 	}
 	if v, ok := r.Int("created_at"); ok {
-		m.CreatedAt = v
+		m.CreatedAt = time.Unix(v)
 	}
 	if v, ok := r.Int("status"); ok {
 		m.Status = v
@@ -358,8 +353,6 @@ func (m *AccessRequest) DecodeFields(r model.FieldReader) {
 
 type AccessRequestList []*AccessRequest
 
-func (s *AccessRequestList) Schema() []model.Field  { return nil }
-func (s *AccessRequestList) Pointers() []any        { return nil }
 func (s *AccessRequestList) Len() int               { return len(*s) }
 func (s *AccessRequestList) At(i int) model.Fielder { return (*s)[i] }
 func (s *AccessRequestList) Append() model.Fielder {
