@@ -42,7 +42,7 @@ func (m *Module) Request(email, name, message string) (req AccessRequest, create
 		return *pending[0], false, nil
 	}
 
-	nowSec := time.Now() / 1_000_000_000
+	nowSec := time.NowUnix()
 	newID := m.ids.NewID()
 	req = AccessRequest{
 		Id:        newID,

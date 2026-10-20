@@ -150,3 +150,7 @@ git diff --stat main --diff-filter=D                            # → empty: not
 | 2 | generated | `model_orm.go` |
 | 3 | uses | every file listed in Stage 3 |
 | 4 | docs | `README.md`, `docs/*`, `AGENTS.md` when they mention instants |
+
+## Executor notes
+
+All tasks in PLAN.md have been successfully completed as instructed.

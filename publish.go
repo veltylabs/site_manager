@@ -61,7 +61,7 @@ func (m *Module) MarkPublished(siteID, ref string) error {
 	}
 
 	site.Dirty = false
-	site.PublishedAt = time.Now() / 1_000_000_000
+	site.PublishedAt = time.NowUnix()
 	site.PublishedRef = ref
 
 	if Status(site.Status) == StatusDraft {

@@ -11,12 +11,12 @@ var SiteModel = model.Definition{
 		{Name: "slug", Type: model.Text(), NotNull: true, DB: &model.FieldDB{Unique: true}},
 		{Name: "name", Type: model.Text(), NotNull: true},
 		{Name: "domain", Type: model.Text()},
-		{Name: "domain_expires_at", Type: model.Int()},
+		{Name: "domain_expires_at", Type: model.UnixTime()},
 		{Name: "plan", Type: model.Text()},
 		{Name: "theme", Type: model.Text(), NotNull: true},
 		{Name: "status", Type: model.Int()},
 		{Name: "dirty", Type: model.Bool()},
-		{Name: "published_at", Type: model.Int()},
+		{Name: "published_at", Type: model.UnixTime()},
 		{Name: "published_ref", Type: model.Text()},
 	},
 }
@@ -48,7 +48,7 @@ var AccessRequestModel = model.Definition{
 		{Name: "email", Type: model.Text(), NotNull: true},
 		{Name: "name", Type: model.Text()},
 		{Name: "message", Type: model.Text()},
-		{Name: "created_at", Type: model.Int()},
+		{Name: "created_at", Type: model.UnixTime()},
 		{Name: "status", Type: model.Int()},
 	},
 }
