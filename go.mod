@@ -5,7 +5,7 @@ go 1.26.8
 require (
 	webtyp.com/ddl v0.0.15
 	webtyp.com/fmt v1.0.0
-	webtyp.com/model v0.2.3
+	webtyp.com/model v0.2.4
 	webtyp.com/orm v0.12.8
 	webtyp.com/router v0.4.3
 	webtyp.com/time v0.5.7
