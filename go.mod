@@ -16,5 +16,5 @@ require webtyp.com/storage v0.1.8
 require (
 	webtyp.com/calendar v0.1.0 // indirect
 	webtyp.com/escape v0.1.0 // indirect
-	webtyp.com/json v0.5.29 // indirect
+	webtyp.com/json v0.5.37 // indirect
 )
