@@ -7,6 +7,8 @@ import (
 
 // MarkDirty marca el sitio como pendiente de publicar. Es idempotente: si ya
 // estaba sucio no vuelve a escribir.
+//
+// Ejemplo: err := m.MarkDirty("site_123")
 func (m *Module) MarkDirty(siteID string) error {
 	if siteID == "" {
 		return ErrInvalidData
@@ -31,6 +33,8 @@ func (m *Module) MarkDirty(siteID string) error {
 
 // DirtySites devuelve los sitios pendientes de publicar, excluyendo los
 // suspendidos.
+//
+// Ejemplo: sites, err := m.DirtySites()
 func (m *Module) DirtySites() (SiteList, error) {
 	return ReadAllSite(
 		m.db.Query(&Site{}).
@@ -46,6 +50,8 @@ func (m *Module) DirtySites() (SiteList, error) {
 // MarkPublished limpiará un Dirty que corresponde a un cambio más nuevo, y ese
 // cambio esperará al cron diario de publicación. Resolverlo de verdad exige
 // versionar el contenido, que hoy no existe.
+//
+// Ejemplo: err := m.MarkPublished("site_123", "v1.2.0")
 func (m *Module) MarkPublished(siteID, ref string) error {
 	if siteID == "" || ref == "" {
 		return ErrInvalidData

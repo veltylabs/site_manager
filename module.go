@@ -19,6 +19,9 @@ type Module struct {
 	ids model.IDGenerator
 }
 
+// New inicializa el módulo.
+//
+// Ejemplo: sm, err := sitemanager.New(deps)
 func New(d Deps) (*Module, error) {
 	if d.DB == nil || d.IDs == nil {
 		return nil, ErrNilDependency
@@ -29,18 +32,8 @@ func New(d Deps) (*Module, error) {
 		ids: d.IDs,
 	}
 
-	if ddlCompiler, ok := d.DB.RawConn().(ddl.Compiler); ok {
-		compiler := ddl.New(d.DB.RawConn(), ddlCompiler)
-		if err := compiler.CreateTable(&Site{}); err != nil {
-			return nil, err
-		}
-		if err := compiler.CreateTable(&SiteMember{}); err != nil {
-			return nil, err
-		}
-		if err := compiler.CreateTable(&Plan{}); err != nil {
-			return nil, err
-		}
-		if err := compiler.CreateTable(&AccessRequest{}); err != nil {
+	if c, ok := d.DB.RawConn().(ddl.Compiler); ok {
+		if err := Migrate(d.DB.RawConn(), c); err != nil {
 			return nil, err
 		}
 	}
@@ -48,10 +41,16 @@ func New(d Deps) (*Module, error) {
 	return m, nil
 }
 
+// ModelName devuelve el nombre del modelo.
+//
+// Ejemplo: name := m.ModelName()
 func (m *Module) ModelName() string {
 	return "site"
 }
 
+// MountOperations registra las operaciones en el enrutador.
+//
+// Ejemplo: sm.MountOperations(reg)
 func (m *Module) MountOperations(reg router.OperationRegistry) {
 	reg.Operation("site_get", func(ctx router.Context) {
 		userID := ctx.UserID()

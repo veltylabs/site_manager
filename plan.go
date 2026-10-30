@@ -5,6 +5,8 @@ import (
 )
 
 // CreatePlan registra un plan con sus límites.
+//
+// Ejemplo: err := m.CreatePlan(plan)
 func (m *Module) CreatePlan(p *Plan) error {
 	if p == nil || p.Name == "" || p.MaxPages < 0 || p.MaxImages < 0 {
 		return ErrInvalidData
@@ -22,6 +24,8 @@ func (m *Module) CreatePlan(p *Plan) error {
 }
 
 // PlanOf devuelve los límites del plan asignado al sitio.
+//
+// Ejemplo: plan, err := m.PlanOf("site_123")
 func (m *Module) PlanOf(siteID string) (Plan, error) {
 	site, err := m.SiteByID(siteID)
 	if err != nil {

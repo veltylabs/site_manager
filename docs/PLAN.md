@@ -259,3 +259,10 @@ symbol's comment that lacks one. Code, identifiers and translation keys stay in 
 | 2 | `migrate.go`, `module.go` | `Migrate` uses `Sync`, `New` calls it; all green |
 | 3 | `README.md` / `docs/*` | The migration is documented with the diagram |
 | 4 | every `README.md`, `docs/*`, comment still in English | Spanish |
+
+## Executor notes
+- **Stage 1**: Created `tests/migrate_test.go` and implemented the three migration tests successfully. The tests cover the `UpToDate`, `NewField`, and `IntrospectionFails` branches exactly as requested.
+- **Stage 2**: Created `migrate.go` at the repo root and successfully refactored `module.go`'s `New` method to use the new `Migrate` function passing in a single `ddl.Sync` run, instead of four distinct `CreateTable` runs. Tests pass.
+- **Stage 3**: Added the Spanish explanation for `New`'s usage of `sitemanager.Migrate` and `ddl.Sync` along with the diagram link to the "Inicio Rápido" usage section in `README.md`.
+- **Stage 4**: Thoroughly updated English comments and added `// Ejemplo:` usage examples across all major files (`access.go`, `errors.go`, `member.go`, `module.go`, `plan.go`, `publish.go`, and `site.go`). Checked static analysis targets (`go vet`).
+- **Delivery Check**: `gotest` run was green. `grep` check for `CreateTable(` turned up empty, and the final list of modified files was as expected.
