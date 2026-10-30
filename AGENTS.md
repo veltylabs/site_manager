@@ -52,7 +52,7 @@ A module's **non-test** Go files may import, from `github.com/webtyp/*`:
 | `events` | `Publisher`/`Subscriber`/`Event` | Pub/sub contract; the broker (in-proc, `sse`, a queue) is injected |
 | `orm` | `*orm.DB`, query builder (`Create`/`Update`/`Delete`/`Query`) | Ergonomic layer over `storage.Conn` — the equivalent of `database/sql`, backend-agnostic by construction |
 | `storage` | `Conn`/`Condition`/`Query` (mostly transitive, via `orm`'s re-exports in `reexport.go`) | The actual storage **port** — `orm` never redefines it |
-| `ddl` | `CreateTable`/`Sync` (runtime schema) | Sibling of `orm` over `storage.Conn` — still backend-agnostic |
+| `ddl` | `Sync` (runtime schema) | Sibling of `orm` over `storage.Conn` — still backend-agnostic |
 | `form/input` | `input.Text()`, `input.Number()`, … (`Kind` with a UI widget) | Only when a `model.Definition` field needs a widget for a form; still just a `Kind`, no renderer |
 | `fmt` | string/number/error handling, `Err(...)` | The ecosystem's stdlib replacement — see the stdlib section below |
 | `time` | date/time helpers | The ecosystem's `time` replacement (isomorphic, wasm-safe) |
@@ -180,7 +180,7 @@ reflection-free and TinyGo-sized. A module targets `wasm`/TinyGo first, so it fo
   constructs a generator.
 - **Persistence**: `New(db *orm.DB, deps Deps)` receives an already-connected `*orm.DB` (backed by
   whatever `storage.Conn` the app chose) and owns its own schema migration via
-  `github.com/webtyp/ddl`, replacing the removed `orm.DB.CreateTable`. `ddl.New` takes **two**
+  `github.com/webtyp/ddl` (`orm.DB.CreateTable` ya no existe; usa `ddl.DB.Sync`). `ddl.New` takes **two**
   arguments — `ddl.New(conn storage.Conn, ddlCompiler ddl.Compiler)` — and `ddl.Compiler` is a
   capability only SQL backends (`sqlt`, `postgres`) implement; the in-memory test backend
   (`storage/mem`) does not, because it creates tables lazily on first `Exec` and needs no DDL at all.
@@ -188,13 +188,13 @@ reflection-free and TinyGo-sized. A module targets `wasm`/TinyGo first, so it fo
   `storage.TxExecutor` already uses for optional transactions):
   ```go
   if ddlCompiler, ok := db.RawConn().(ddl.Compiler); ok {
-      if err := ddl.New(db.RawConn(), ddlCompiler).CreateTable(&CatalogItem{}); err != nil {
+      if err := ddl.New(db.RawConn(), ddlCompiler).Sync(&CatalogItem{}); err != nil {
           return nil, err
       }
   }
   ```
   Against `storage/mem` (module tests) this is a no-op — nothing to create. Against a real SQL
-  backend it migrates the schema, exactly like the old `orm.DB.CreateTable` did. The module never
+  backend it migrates the schema with `Sync` (creates missing tables and adds new columns). The module never
   receives a raw connection string or picks a driver.
 - **Transport**: the module implements `router.OpModule` — `ModelName() string` +
   `MountOps(reg router.OpRegistry)`, registering each operation with `.Requires(resource, action)`
