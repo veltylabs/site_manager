@@ -26,8 +26,10 @@ func (s RequestStatus) String() string {
 	}
 }
 
-// Request registers an access request. If a pending request already exists for that email,
-// returns the existing one and created=false.
+// Request registra una solicitud de acceso. Si ya existe una solicitud pendiente para ese correo,
+// devuelve la existente y created=false.
+//
+// Ejemplo: req, created, err := m.Request("ejemplo@velty.cl", "Juan", "Hola")
 func (m *Module) Request(email, name, message string) (req AccessRequest, created bool, err error) {
 	if email == "" {
 		return AccessRequest{}, false, ErrInvalidData
@@ -60,8 +62,10 @@ func (m *Module) Request(email, name, message string) (req AccessRequest, create
 	return req, true, nil
 }
 
-// AcceptRequest accepts an access request by setting its status to RequestAccepted.
-// Note: Accepting an AccessRequest creates ZERO SiteMember entries.
+// AcceptRequest acepta una solicitud de acceso cambiando su estado a RequestAccepted.
+// Nota: Aceptar un AccessRequest NO crea ninguna membresía SiteMember.
+//
+// Ejemplo: err := m.AcceptRequest("req_123")
 func (m *Module) AcceptRequest(id string) error {
 	var req AccessRequest
 	err := m.db.Query(&req).Where(AccessRequest_.Id).Eq(id).ReadOne()
@@ -75,6 +79,8 @@ func (m *Module) AcceptRequest(id string) error {
 // PendingRequests devuelve las solicitudes de acceso sin resolver, de la más
 // antigua a la más reciente.
 // Nota: Deja el orden natural de inserción que en mem/D1 coincide con el de creación.
+//
+// Ejemplo: reqs, err := m.PendingRequests()
 func (m *Module) PendingRequests() ([]AccessRequest, error) {
 	rows, err := ReadAllAccessRequest(
 		m.db.Query(&AccessRequest{}).
@@ -91,6 +97,8 @@ func (m *Module) PendingRequests() ([]AccessRequest, error) {
 }
 
 // RequestByID devuelve la solicitud de acceso con ese id.
+//
+// Ejemplo: req, err := m.RequestByID("req_123")
 func (m *Module) RequestByID(id string) (AccessRequest, error) {
 	var req AccessRequest
 	err := m.db.Query(&req).Where(AccessRequest_.Id).Eq(id).ReadOne()

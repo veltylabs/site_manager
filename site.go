@@ -13,6 +13,9 @@ const (
 	StatusSuspended
 )
 
+// String devuelve la representación en texto del estado del sitio.
+//
+// Ejemplo: str := StatusLive.String()
 func (s Status) String() string {
 	switch s {
 	case StatusDraft:
@@ -37,6 +40,9 @@ var validTransitions = []transition{
 	{from: StatusSuspended, to: StatusLive},
 }
 
+// ValidateTransition valida si la transición entre dos estados es permitida.
+//
+// Ejemplo: err := ValidateTransition(StatusDraft, StatusLive)
 func ValidateTransition(from, to Status) error {
 	for i := 0; i < len(validTransitions); i++ {
 		t := validTransitions[i]
@@ -47,7 +53,9 @@ func ValidateTransition(from, to Status) error {
 	return fmt.Errf("site_manager: transicion invalida de %s a %s", from.String(), to.String())
 }
 
-// CreateSite creates a new site ensuring slug uniqueness.
+// CreateSite crea un nuevo sitio asegurando que el slug sea único.
+//
+// Ejemplo: err := m.CreateSite(site)
 func (m *Module) CreateSite(site *Site) error {
 	if site == nil {
 		return ErrInvalidData
@@ -69,7 +77,9 @@ func (m *Module) CreateSite(site *Site) error {
 	return m.db.Create(site)
 }
 
-// UpdateSiteStatus updates a site's status following valid state transitions.
+// UpdateSiteStatus actualiza el estado de un sitio respetando las transiciones válidas.
+//
+// Ejemplo: err := m.UpdateSiteStatus("site_123", StatusLive)
 func (m *Module) UpdateSiteStatus(siteID string, newStatus Status) error {
 	var site Site
 	err := m.db.Query(&site).Where(Site_.Id).Eq(siteID).ReadOne()
@@ -87,6 +97,8 @@ func (m *Module) UpdateSiteStatus(siteID string, newStatus Status) error {
 }
 
 // SiteByID devuelve el sitio con ese id.
+//
+// Ejemplo: site, err := m.SiteByID("site_123")
 func (m *Module) SiteByID(siteID string) (*Site, error) {
 	if siteID == "" {
 		return nil, ErrInvalidData

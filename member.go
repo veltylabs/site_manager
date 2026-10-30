@@ -8,6 +8,9 @@ const (
 	RoleOwner
 )
 
+// String devuelve la representación en texto del rol.
+//
+// Ejemplo: str := RoleOwner.String()
 func (r Role) String() string {
 	switch r {
 	case RoleViewer:
@@ -21,8 +24,10 @@ func (r Role) String() string {
 	}
 }
 
-// MemberOf responds whether a user can touch a site, and with what role.
-// It is the ONLY way to answer this question.
+// MemberOf responde si un usuario puede tocar un sitio y con qué rol.
+// Es la ÚNICA manera de responder esta pregunta.
+//
+// Ejemplo: role, ok := m.MemberOf("usr_123", "site_456")
 func (m *Module) MemberOf(userID, siteID string) (Role, bool) {
 	if userID == "" || siteID == "" {
 		return RoleViewer, false
@@ -38,8 +43,10 @@ func (m *Module) MemberOf(userID, siteID string) (Role, bool) {
 	return Role(member.Role), true
 }
 
-// SitesOf returns the sites where the user has membership.
-// Can return empty slice: normal state, not an error.
+// SitesOf devuelve los sitios donde el usuario tiene membresía.
+// Puede devolver un slice vacío: esto es estado normal, no un error.
+//
+// Ejemplo: sites, err := m.SitesOf("usr_123")
 func (m *Module) SitesOf(userID string) ([]Site, error) {
 	if userID == "" {
 		return []Site{}, nil
@@ -65,7 +72,9 @@ func (m *Module) SitesOf(userID string) ([]Site, error) {
 	return res, nil
 }
 
-// AddMember adds a user membership to a site.
+// AddMember añade la membresía de un usuario a un sitio.
+//
+// Ejemplo: member, err := m.AddMember("site_456", "usr_123", RoleOwner)
 func (m *Module) AddMember(siteID, userID string, role Role) (*SiteMember, error) {
 	if siteID == "" || userID == "" {
 		return nil, ErrInvalidData

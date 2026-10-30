@@ -46,6 +46,8 @@ Este módulo es el dueño del `site_id` dentro del ecosistema de Velty.
 
 ## Inicio Rápido
 
+El constructor `New` migra el esquema de base de datos a través de `sitemanager.Migrate`, el cual usa `ddl.Sync` para crear tablas o agregar columnas faltantes. Flujo: https://github.com/webtyp/ddl/blob/main/docs/diagrams/SYNC_FLOW.md
+
 ```go
 package main
 
