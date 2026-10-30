@@ -2,11 +2,12 @@
 PLAN: "fix: migrate with ddl.Sync so a new field reaches an existing table"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
-SESSION: 2174337263824170694
 ---
 
 > Read AGENTS.md at the repo root before any change.
+> **Finish by yourself:** when the delivery check passes, commit, push and open the pull request. Never ask whether to
+> proceed or finalize — nobody answers, and a session that waits ends without your work (a previous run of this plan
+> was lost exactly that way).
 
 # Migrate with `ddl.Sync`
 
