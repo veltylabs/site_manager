@@ -11,7 +11,7 @@ require (
 	webtyp.com/time v0.6.4
 )
 
-require webtyp.com/storage v0.1.18
+require webtyp.com/storage v0.1.19
 
 require (
 	webtyp.com/calendar v0.1.0 // indirect
