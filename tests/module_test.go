@@ -171,9 +171,10 @@ func TestMountOpsSiteCreateDeniesWithoutAuthorization(t *testing.T) {
 	_, reg := setupRouter(t, nil)
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"slug":"denied","name":"Denied","theme":"landing"}`),
 	}
-	reg.Invoke("OP", "/site_create", ctx)
+	reg.Invoke("OP", "/site.site.create", ctx)
 
 	if ctx.Status != 403 {
 		t.Fatalf("expected 403 for unauthorized site_create, got %d", ctx.Status)
@@ -186,10 +187,11 @@ func TestMountOpsSiteCreateAllowsAuthorizedCaller(t *testing.T) {
 	})
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"slug":"allowed","name":"Allowed","theme":"landing"}`),
 	}
 	ctx.SetUserID("owner1")
-	reg.Invoke("OP", "/site_create", ctx)
+	reg.Invoke("OP", "/site.site.create", ctx)
 
 	if ctx.Status != 201 {
 		t.Fatalf("expected authorized site_create to succeed with status 201, got status %d body %s", ctx.Status, ctx.ResponseBody())
@@ -218,10 +220,11 @@ func TestSiteGetDeniesNonMember(t *testing.T) {
 	}
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"id":"` + site.Id + `"}`),
 	}
 	ctx.SetUserID("nonmember")
-	reg.Invoke("OP", "/site_get", ctx)
+	reg.Invoke("OP", "/site.site.read", ctx)
 
 	if ctx.Status != 403 {
 		t.Fatalf("expected 403 for non-member site_get, got %d", ctx.Status)
@@ -243,10 +246,11 @@ func TestSiteGetAllowsMember(t *testing.T) {
 	}
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"id":"` + site.Id + `"}`),
 	}
 	ctx.SetUserID("member1")
-	reg.Invoke("OP", "/site_get", ctx)
+	reg.Invoke("OP", "/site.site.read", ctx)
 
 	if ctx.Status != 200 && ctx.Status != 0 {
 		t.Fatalf("expected 200 (or implicit 0 from WriteStatus not being called) for member site_get, got %d", ctx.Status)
@@ -260,9 +264,10 @@ func TestSiteGetRejectsAnonymous(t *testing.T) {
 	_, reg := setupRouter(t, nil)
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"id":"site-id"}`),
 	}
-	reg.Invoke("OP", "/site_get", ctx)
+	reg.Invoke("OP", "/site.site.read", ctx)
 
 	if ctx.Status != 401 && ctx.Status != 403 {
 		t.Fatalf("expected 401 or 403 for anonymous site_get, got %d", ctx.Status)
@@ -275,10 +280,11 @@ func TestSiteGetRejectsEmptyID(t *testing.T) {
 	})
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"id":""}`),
 	}
 	ctx.SetUserID("user1")
-	reg.Invoke("OP", "/site_get", ctx)
+	reg.Invoke("OP", "/site.site.read", ctx)
 
 	if ctx.Status != 400 {
 		t.Fatalf("expected 400 for empty id site_get, got %d", ctx.Status)
@@ -291,10 +297,11 @@ func TestSiteCreateAddsOwner(t *testing.T) {
 	})
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"slug":"owner-test","name":"Owner Test","theme":"landing"}`),
 	}
 	ctx.SetUserID("creator1")
-	reg.Invoke("OP", "/site_create", ctx)
+	reg.Invoke("OP", "/site.site.create", ctx)
 
 	if ctx.Status != 201 {
 		t.Fatalf("expected 201 for site_create, got %d", ctx.Status)
@@ -319,10 +326,11 @@ func TestSiteCreateReturns201(t *testing.T) {
 	})
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"slug":"return-201","name":"Return 201","theme":"landing"}`),
 	}
 	ctx.SetUserID("creator2")
-	reg.Invoke("OP", "/site_create", ctx)
+	reg.Invoke("OP", "/site.site.create", ctx)
 
 	if ctx.Status != 201 {
 		t.Fatalf("expected status 201 for site_create, got %d", ctx.Status)
@@ -333,9 +341,10 @@ func TestAccessRequestRejectsAnonymous(t *testing.T) {
 	_, reg := setupRouter(t, nil)
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"email":"prospect@example.com","name":"Prospect","message":"hola"}`),
 	}
-	reg.Invoke("OP", "/access_request", ctx)
+	reg.Invoke("OP", "/site.access_request.create", ctx)
 
 	if ctx.Status != 403 {
 		t.Fatalf("expected 403 for anonymous access_request, got %d", ctx.Status)
@@ -348,10 +357,11 @@ func TestAccessRequestAllowsAuthenticated(t *testing.T) {
 	})
 
 	ctx := &mockrouter.Context{
+		InMethod: "POST",
 		InBody: []byte(`{"email":"prospect@example.com","name":"Prospect","message":"hola"}`),
 	}
 	ctx.SetUserID("auth_user")
-	reg.Invoke("OP", "/access_request", ctx)
+	reg.Invoke("OP", "/site.access_request.create", ctx)
 
 	if ctx.Status == 403 || ctx.Status == 401 {
 		t.Fatalf("expected authenticated access_request to succeed, got status %d", ctx.Status)

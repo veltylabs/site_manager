@@ -7,8 +7,6 @@ import (
 	"webtyp.com/router"
 )
 
-var _ router.OperationModule = (*Module)(nil)
-
 type Deps struct {
 	DB  *orm.DB
 	IDs model.IDGenerator
@@ -52,7 +50,7 @@ func (m *Module) ModelName() string {
 //
 // Ejemplo: sm.MountOperations(reg)
 func (m *Module) MountOperations(reg router.OperationRegistry) {
-	reg.Operation("site_get", func(ctx router.Context) {
+	reg.Operation(router.Operation{Module: "site", Entity: "site", Action: model.Read}, func(ctx router.Context) {
 		userID := ctx.UserID()
 		if userID == "" {
 			ctx.WriteStatus(401)
@@ -81,7 +79,7 @@ func (m *Module) MountOperations(reg router.OperationRegistry) {
 		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Read).Accepts(&Site{})
 
-	reg.Operation("site_create", func(ctx router.Context) {
+	reg.Operation(router.Operation{Module: "site", Entity: "site", Action: model.Create}, func(ctx router.Context) {
 		userID := ctx.UserID()
 		if userID == "" {
 			ctx.WriteStatus(401)
@@ -108,7 +106,7 @@ func (m *Module) MountOperations(reg router.OperationRegistry) {
 		_ = ctx.Encode(&s)
 	}).Requires(model.Resource("site"), model.Create).Accepts(&Site{})
 
-	reg.Operation("access_request", func(ctx router.Context) {
+	reg.Operation(router.Operation{Module: "site", Entity: "access_request", Action: model.Create}, func(ctx router.Context) {
 		var req AccessRequest
 		if err := ctx.Decode(&req); err != nil {
 			ctx.WriteStatus(400)
